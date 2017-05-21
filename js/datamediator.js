@@ -1,8 +1,8 @@
 /**
  * @fileOverview Deferred data loader / cacher singleton. Provides vboxDataMediator
  * @author Ian Moore (imoore76 at yahoo dot com)
- * @version $Id: datamediator.js 591 2015-04-11 22:40:47Z imoore76 $
- * @copyright Copyright (C) 2010-2015 Ian Moore (imoore76 at yahoo dot com)
+ * @version $Id: datamediator.js 543 2013-08-08 15:46:34Z imoore76 $
+ * @copyright Copyright (C) 2010-2013 Ian Moore (imoore76 at yahoo dot com)
  */
 
 /**
@@ -93,7 +93,7 @@ var vboxVMDataMediator = {
 			for(var i = 0; i < d.responseData.length; i++) {
 				
 				// Enforce VM ownership
-			    if($('#vboxPane').data('vboxConfig').enforceVMOwnership && !$('#vboxPane').data('vboxSession').admin && d.responseData[i].owner != $('#vboxPane').data('vboxSession').user) {
+			    if($('#vboxPane').data('vboxConfig').enforceVMOwnership && !$('#vboxPane').data('vboxSession').admin && d.vmlist[i].owner != $('#vboxPane').data('vboxSession').user) {
 			    	continue;
 			    }
 
@@ -306,7 +306,7 @@ $(document).ready(function(){
 
 	
 	// Snapshot changed
-	}).on('vboxOnSnapshotTaken vboxOnSnapshotDeleted vboxOnSnapshotChanged vboxOnSnapshotRestored',function(e,eventData) {
+	}).on('vboxOnSnapshotTaken vboxOnSnapshotDeleted vboxOnSnapshotChanged',function(e,eventData) {
 		
 		if(vboxVMDataMediator.vmData[eventData.machineId]) {
 			
@@ -441,6 +441,12 @@ $(document).ready(function(){
 				
 				break;
 			
+			// Save mounted media changes at runtime
+			case 'GUI/SaveMountedAtRuntime':
+				if(vboxVMDataMediator.vmDetailsData[eventData.machineId])
+					vboxVMDataMediator.vmDetailsData[eventData.machineId].GUI.SaveMountedAtRuntime = eventData.value;
+				break;
+				
 			// First time run
 			case 'GUI/FirstRun':
 				if(vboxVMDataMediator.vmDetailsData[eventData.machineId])

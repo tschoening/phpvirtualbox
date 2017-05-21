@@ -1,9 +1,9 @@
 <!-- 
 
 	General Network Preferences
-	Copyright (C) 2010-2015 Ian Moore (imoore76 at yahoo dot com)
+	Copyright (C) 2010-2013 Ian Moore (imoore76 at yahoo dot com)
 	
-	$Id: settingsGlobalNetwork.html 597 2015-04-20 11:41:28Z imoore76 $
+	$Id: settingsGlobalNetwork.html 582 2014-12-11 17:47:28Z imoore76 $
 
  -->
 <ul>
@@ -17,10 +17,7 @@
 					<div class='vboxBordered' style='height: 280px'>
 						<table style='width:100%; border-spacing: 0px;' class='vboxList vboxHover'>
 							<thead>
-								<tr>
-                                    <th style='width: 140px; padding-left: 4px;text-align:left' class='translate'>Active</th>
-                                    <th style='text-align:left' class='translate'>Name</th>
-                                </tr>
+								<tr><th style='width: 140px; padding-left: 4px;text-align:left'>Active</th><th style='text-align:left'>Name</th></tr>
 							</thead>
 							<tbody id='vboxSettingsGlobalNATNetList'>
 								<tr><td>asdf</td><td>asdf</td></tr>
@@ -148,7 +145,7 @@ var sButtons = new Array(
 
 	{
 		'name' : 'addNet',
-		'label' : 'Add host-only network',
+		'label' : trans('Add host-only network','UIGlobalSettingsNetwork'),
 		'icon' : 'add_host_iface',
 		'enabled' : function () { return true; },
 		'click' : function () {
@@ -182,7 +179,7 @@ var sButtons = new Array(
 
 	{
 		'name' : 'delNet',
-		'label' : 'Remove host-only network',
+		'label' : trans('Remove host-only network','UIGlobalSettingsNetwork'),
 		'icon' : 'remove_host_iface',
 		'enabled' : function (item) { return ($(item).data('interface')); },
 		'click' : function () {
@@ -227,7 +224,7 @@ var sButtons = new Array(
 	},
 	{
 		'name' : 'editNet',
-		'label' : 'Edit host-only network',
+		'label' : trans('Edit host-only network','UIGlobalSettingsNetwork'),
 		'icon' : 'guesttools',
 		'enabled' : function (item) { return ($(item).data('interface')); },
 		'click' : function () {
@@ -235,8 +232,7 @@ var sButtons = new Array(
 		}
 	},{
 		name : 'refreshNet',
-		'label' : 'Refresh',
-		'language_context': 'UIVMLogViewer',
+		'label' : trans('Refresh','UIVMLogViewer'),
 		'icon' : 'refresh',
 		click: function() {
 			var l = new vboxLoader();
@@ -249,7 +245,7 @@ var sButtons = new Array(
 	}
 );
 
-var netToolbar = new vboxToolbarSmall({buttons: sButtons, language_context: 'UIGlobalSettingsNetwork'});
+var netToolbar = new vboxToolbarSmall(sButtons);
 netToolbar.renderTo('vboxSettingsGlobalNetToolbar');
 
 $('#vboxSettingsGlobalNetList').on('select',function(e,i){
@@ -263,7 +259,7 @@ var sButtons = new Array(
 
 	{
 		'name' : 'addNet',
-		'label' : 'Add NAT network',
+		'label' : trans('Add NAT network','UIGlobalSettingsNetwork'),
 		'icon' : 'add_host_iface',
 		'click' : function () {
 
@@ -283,7 +279,7 @@ var sButtons = new Array(
 
 	{
 		'name' : 'delNet',
-		'label' : 'Remove NAT network',
+		'label' : trans('Remove NAT network','UIGlobalSettingsNetwork'),
 		'icon' : 'remove_host_iface',
 		'enabled' : function (item) { return (item); },
 		'click' : function () {
@@ -309,7 +305,7 @@ var sButtons = new Array(
 	},
 	{
 		'name' : 'editNet',
-		'label' : 'Edit NAT network',
+		'label' : trans('Edit NAT network','UIGlobalSettingsNetwork'),
 		'icon' : 'guesttools',
 		'enabled' : function (item) { return (item); },
 		'click' : function () {
@@ -317,8 +313,7 @@ var sButtons = new Array(
 		}
 	},{
 		name : 'refreshNet',
-		'label' : 'Refresh',
-		'language_context': 'UIVMLogViewer',
+		'label' : trans('Refresh','UIVMLogViewer'),
 		'icon' : 'refresh',
 		click: function() {
 			var l = new vboxLoader();
@@ -331,7 +326,7 @@ var sButtons = new Array(
 	}
 );
 
-var natNetToolbar = new vboxToolbarSmall({buttons: sButtons, language_context: 'UIGlobalSettingsNetwork'});
+var natNetToolbar = new vboxToolbarSmall(sButtons);
 natNetToolbar.renderTo('vboxSettingsGlobalNATNetToolbar');
 
 $('#vboxSettingsGlobalNATNetList').on('select',function(e,i){
@@ -398,7 +393,7 @@ function vboxSettingsGlobalNATNetworksAddNet(net) {
 	$('<tr />').data({'NATNetwork':net}).hoverClass('vboxHover').addClass('vboxListItem').append(
 		$('<td />').append(
 				$('<input />').attr({'type':'checkbox'}).click(function(){
-					$(this).closest('tr').data('NATNetwork').enabled = this.checked;		
+					$(this).closest('tr').data('NATNetwork').enabled = (this.checked ? 1 : 0);		
 					$(this).closest('tr').data('NATNetwork')._modified = true;
 					}).prop('checked', net.enabled)
 				
@@ -437,7 +432,7 @@ buttons[trans('OK','QIMessageBox')] = function(){
 	nic.IPV6NetworkMaskPrefixLength = $('#vboxSettingsGlobalNetIPv6Mask').val();
 	nic.dhcpServer = {};
 	nic.dhcpServer.networkName = nic.networkName;
-	nic.dhcpServer.enabled = $('#vboxSettingsGlobalNetDHCPEnabled').prop('checked');
+	nic.dhcpServer.enabled = ($('#vboxSettingsGlobalNetDHCPEnabled').prop('checked') ? 1 : 0);
 	nic.dhcpServer.IPAddress = $('#vboxSettingsGlobalNetServerAddress').val();
 	nic.dhcpServer.networkMask = $('#vboxSettingsGlobalNetServerMask').val();
 	nic.dhcpServer.lowerIP = $('#vboxSettingsGlobalNetLower').val();
@@ -481,12 +476,15 @@ function vboxSettingsGlobalNetEditDialog() {
 
 	
 	$('#vboxSettingsGlobalNetEdit').tabs('option','active',0);
-	$('#vboxSettingsGlobalNetDHCPEnabled').trigger('click');
 
 	if(nic.dhcpServer && nic.dhcpServer.enabled && !$('#vboxSettingsGlobalNetDHCPEnabled').prop('checked')) {
-		$('#vboxSettingsGlobalNetDHCPEnabled').trigger('click');
+		$('#vboxSettingsGlobalNetDHCPEnabled').prop('checked',true);
+		$('#vboxSettingsGlobalNetDHCPEnabled').click();
+		$('#vboxSettingsGlobalNetDHCPEnabled').prop('checked',true);
 	} else if(nic.dhcpServer && !nic.dhcpServer.enabled && $('#vboxSettingsGlobalNetDHCPEnabled').prop('checked')) {
-		$('#vboxSettingsGlobalNetDHCPEnabled').trigger('click');
+		$('#vboxSettingsGlobalNetDHCPEnabled').prop('checked',false);
+		$('#vboxSettingsGlobalNetDHCPEnabled').click();
+		$('#vboxSettingsGlobalNetDHCPEnabled').prop('checked',false);
 	}
 
 	$('#vboxSettingsGlobalNetEditDialog').dialog('open');
@@ -498,7 +496,7 @@ function vboxSettingsGlobalNetEditDialog() {
 * Edit NAT Network Interface Dialog 
 *
 */
-vboxInitDisplay('vboxSettingsGlobalNATNetworkEditDialog', 'UIGlobalSettingsNetworkDetailsNAT');
+vboxInitDisplay('vboxSettingsGlobalNATNetworkEditDialog','UIGlobalSettingsNetworkDetails');
 
 var buttons = {};
 buttons[trans('OK','QIMessageBox')] = function(){
@@ -506,12 +504,12 @@ buttons[trans('OK','QIMessageBox')] = function(){
 	var net = $('#vboxSettingsGlobalNATNetList').children('tr.vboxListItemSelected').first().data('NATNetwork');
 	
 	// Get Form Values
-	net.enabled = $('#vboxSettingsGlobalNATNetEnabled').prop('checked');
+	net.enabled = $('#vboxSettingsGlobalNATNetEnabled').prop('checked') ? 1 : 0;
 	net.networkName = $('#vboxSettingsGlobalNATNetName').val();
 	net.network = $('#vboxSettingsGlobalNATNetNetwork').val();
-	net.needDhcpServer = $('#vboxSettingsGlobalNATNetDHCP').prop('checked');
-	net.IPv6Enabled = $('#vboxSettingsGlobalNATNetIPv6').prop('checked');
-	net.advertiseDefaultIPv6RouteEnabled = $('#vboxSettingsGlobalNATNetIPv6Route').prop('checked');
+	net.needDhcpServer = $('#vboxSettingsGlobalNATNetDHCP').prop('checked') ? 1 : 0;
+	net.IPv6Enabled = $('#vboxSettingsGlobalNATNetIPv6').prop('checked') ? 1 : 0;
+	net.advertiseDefaultIPv6RouteEnabled = $('#vboxSettingsGlobalNATNetIPv6Route').prop('checked') ? 1 : 0;
 	net._modified = true;
 
 	$('#vboxSettingsGlobalNATNetList').children('tr.vboxListItemSelected').first().data('NATNetwork',net).find('input').prop('checked', net.enabled);
@@ -542,10 +540,10 @@ function vboxSettingsGlobalNATNetworkEditDialog() {
 	$('#vboxSettingsGlobalNATNetIPv6').prop('checked', net.IPv6Enabled)
 	$('#vboxSettingsGlobalNATNetIPv6Route').prop('checked', net.advertiseDefaultIPv6RouteEnabled)
 
-	$('#vboxSettingsGlobalNATNetEnabled').triggerHandler('click');
-	$('#vboxSettingsGlobalNATNetIPv6').triggerHandler('click');
+	$('#vboxSettingsGlobalNATNetEnabled').trigger('syntheticClick');
+	$('#vboxSettingsGlobalNATNetIPv6').trigger('syntheticClick');
 	
-	$('#vboxSettingsGlobalNATNetRules').val(trans('Port Forwarding', 'UIGlobalSettingsNetworkDetailsNAT')).off('click').on('click',function(){
+	$('#vboxSettingsGlobalNATNetRules').off('click').on('click',function(){
 		vboxSettingsGlobalNetworkNatPortForwardingDialog(net, $('#vboxSettingsGlobalNATNetList').children('tr.vboxListItemSelected').first());	
 	});
 	

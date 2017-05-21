@@ -1,9 +1,9 @@
 <!--
 
 	VM System Settings
-	Copyright (C) 2010-2015 Ian Moore (imoore76 at yahoo dot com)
+	Copyright (C) 2010-2013 Ian Moore (imoore76 at yahoo dot com)
 	
-	$Id: settingsSystem.html 597 2015-04-20 11:41:28Z imoore76 $
+	$Id: settingsSystem.html 563 2013-10-15 20:25:52Z imoore76 $
 
 -->
 
@@ -76,7 +76,7 @@
 	</tr>	
 	<tr>
 		<th style='text-align:right'><span class='translate'>Extended Features:</span></th>
-		<td><label><input type='checkbox' class='vboxCheckbox' name='vboxSettingsSystemIOAPIC' /> <span class='translate'>Enable I/O APIC</span></label></td>
+		<td><label><input type='checkbox' class='vboxCheckbox' name='vboxSettingsSystemIOAPIC' /> <span class='translate'>Enable IO APIC</span></label></td>
 	</tr>
 	<tr>
 		<th></th>
@@ -84,7 +84,7 @@
 	</tr>
 	<tr>
 		<th></th>
-		<td><label><input type='checkbox' class='vboxCheckbox' name='vboxSettingsSystemRTCUseUTC' /> <span class='translate'>Hardware Clock in UTC Time</span></label></td>
+		<td><label><input type='checkbox' class='vboxCheckbox' name='vboxSettingsSystemRTCUseUTC' /> <span class='translate'>Hardware clock in UTC time</span></label></td>
 	</tr>
 	<tr class='vboxSettingsSystemAdvancedOnly'>
 		<th></th>
@@ -162,20 +162,9 @@
 <!-- Acceleration Tab -->
 <div id='vboxSettingsTabSystemAcceleration' title='Acceleration'>
 <table>
-    <tr>
-        <th class='vboxEnablerIgnore'><span class='translate'>Paravirtualization Interface:</span></th>
-        <td><select name='vboxSettingsParavirtInterface' class='vboxEnablerIgnore'>
-            <option value='None'>None</option>
-            <option value='Default'>Default</option>
-            <option value='Legacy'>Legacy</option>
-            <option value='Minimal'>Minimal</option>
-            <option value='HyperV'>HyperV</option>
-            <option value='KVM'>KVM</option>
-        </select></td>
 	<tr>
-		<th style='text-align:right' class='vboxEnablerIgnore vboxSettingsAccelRequired'><span class='translate'>Hardware Virtualization:</span></th>
-		<td style='width:100%'><label><input type='checkbox' name='settingsSystemVT' class='vboxEnablerCheckbox vboxSettingsAccelRequired'/>
-		  <span class='translate vboxSettingsAccelRequired'>Enable VT-x/AMD-V</span></label></td>
+		<th style='text-align:right' class='vboxEnablerIgnore'><span class='translate'>Hardware Virtualization:</span></th>
+		<td style='width:100%'><label><input type='checkbox' name='settingsSystemVT' class='vboxEnablerCheckbox'/> <span class='translate'>Enable VT-x/AMD-V</span></label></td>
 	</tr>
 	<tr>
 		<th></th>
@@ -202,11 +191,9 @@
 /* Boot order devices */
 $('#vboxVMBootOrder').find("span.vboxBootOrderDevice").html(function(i,h){return trans(vboxDevice(h),'VBoxGlobal');});
 
-/* Chipsets */
+/* CHipsets */
 $('#vboxSettingsSystemChipsetRow').find('option').html(function(i,h){return trans(h,'VBoxGlobal');});
 
-/* Paravirtualization providers */
-$(document.forms['frmVboxSettings'].vboxSettingsParavirtInterface).find('option').html(function(i,h){return trans(h,'VBoxGlobal', 'ParavirtProvider');});
 
 $('#vboxSettingsSystemMemory').data('form','frmVboxSettings');
 $('#vboxSettingsSystemProcessor').data('form','frmVboxSettings');
@@ -299,9 +286,7 @@ $('#vboxSettingsDialog').on('dataLoaded',function(){
 	document.forms['frmVboxSettings'].settingsSystemVT.checked = ($('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.Enabled);
 	document.forms['frmVboxSettings'].settingsSystemPaging.checked = ($('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.NestedPaging);
 	
-	$(document.forms['frmVboxSettings'].vboxSettingsParavirtInterface).val($('#vboxSettingsDialog').data('vboxMachineData').paravirtProvider);
-	
-	$(document.forms['frmVboxSettings'].settingsSystemVT).triggerHandler('click');
+	$(document.forms['frmVboxSettings'].settingsSystemVT).trigger('syntheticClick');
 
 
 	/* Only if acceleration config is enabled */
@@ -410,10 +395,8 @@ $('#vboxSettingsDialog').on('dataLoaded',function(){
 $('#vboxSettingsDialog').one('show',function(){
 	
 	// Are virtualExtensions supported by the cpu?
-	if(!$('#vboxSettingsDialog').data('vboxHostDetails').cpuFeatures.HWVirtEx && !$('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.Enabled) {
-	    
-	    $('#vboxSettingsTabSystemAcceleration').find('input.vboxSettingsAccelRequired').prop('disabled', true);
-	    $('#vboxSettingsTabSystemAcceleration').find('.vboxSettingsAccelRequired').addClass('vboxDisabled');
+	if(!$('#vboxSettingsDialog').data('vboxHostDetails').cpuFeatures.HWVirtEx && !$('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.Enabled && !$('#vboxPane').data('vboxConfig').enableAdvancedConfig) {
+		$('#vboxSettingsTabSystemMotherboard').parent().tabs({disabled: [2]});
 	}
 
 
@@ -424,32 +407,30 @@ $('#vboxSettingsDialog').one('show',function(){
 $('#vboxSettingsDialog').on('save',function(){
 
 	$('#vboxSettingsDialog').data('vboxMachineData').memorySize = parseInt(document.forms['frmVboxSettings'].vboxSettingsSystemMemoryValue.value);
-	$('#vboxSettingsDialog').data('vboxMachineData').BIOSSettings.IOAPICEnabled = document.forms['frmVboxSettings'].vboxSettingsSystemIOAPIC.checked;
+	$('#vboxSettingsDialog').data('vboxMachineData').BIOSSettings.IOAPICEnabled = (document.forms['frmVboxSettings'].vboxSettingsSystemIOAPIC.checked ? 1 : 0);
 	$('#vboxSettingsDialog').data('vboxMachineData').firmwareType = (document.forms['frmVboxSettings'].vboxSettingsSystemEFI.checked ? 'EFI' : 'BIOS');
 	$('#vboxSettingsDialog').data('vboxMachineData').CPUCount = parseInt($('#vboxSettingsSystemProcessor').slider('value'));
 	$('#vboxSettingsDialog').data('vboxMachineData').CPUExecutionCap = parseInt($('#vboxSettingsSystemProcessorCap').slider('value'));
-	$('#vboxSettingsDialog').data('vboxMachineData').CpuProperties.PAE = document.forms['frmVboxSettings'].vboxSettingsSystemPAE.checked;
-	$('#vboxSettingsDialog').data('vboxMachineData').RTCUseUTC = document.forms['frmVboxSettings'].vboxSettingsSystemRTCUseUTC.checked;
+	$('#vboxSettingsDialog').data('vboxMachineData').CpuProperties.PAE = (document.forms['frmVboxSettings'].vboxSettingsSystemPAE.checked ? 1 : 0);
+	$('#vboxSettingsDialog').data('vboxMachineData').RTCUseUTC = (document.forms['frmVboxSettings'].vboxSettingsSystemRTCUseUTC.checked ? 1 : 0);
 
 	/* Only if we had a chipset */
 	if($('#vboxSettingsDialog').data('vboxMachineData').chipsetType)
 		$('#vboxSettingsDialog').data('vboxMachineData').chipsetType = $(document.forms['frmVboxSettings'].vboxSettingsSystemChipset).val();
 		
 	if($('#vboxSettingsDialog').data('vboxHostDetails').cpuFeatures.HWVirtEx || $('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.Enabled || $('#vboxPane').data('vboxConfig').enableAdvancedConfig) {
-		$('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.Enabled = document.forms['frmVboxSettings'].settingsSystemVT.checked;
-		$('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.NestedPaging = $('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.Enabled && document.forms['frmVboxSettings'].settingsSystemPaging.checked;
+		$('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.Enabled = (document.forms['frmVboxSettings'].settingsSystemVT.checked ? 1 : 0);
+		$('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.NestedPaging = ($('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.Enabled && document.forms['frmVboxSettings'].settingsSystemPaging.checked ? 1 : 0);
 	}
-	
-	 $('#vboxSettingsDialog').data('vboxMachineData').paravirtProvider = $(document.forms['frmVboxSettings'].vboxSettingsParavirtInterface).val();
 	
 	/* Only if advanced config is enabled */
 	if($('#vboxPane').data('vboxConfig').enableAdvancedConfig) {
-		$('#vboxSettingsDialog').data('vboxMachineData').pageFusionEnabled = document.forms['frmVboxSettings'].vboxSettingsSystemPageFusion.checked;
-		$('#vboxSettingsDialog').data('vboxMachineData').HPETEnabled = document.forms['frmVboxSettings'].vboxSettingsSystemHPET.checked;
-		$('#vboxSettingsDialog').data('vboxMachineData').disableHostTimeSync = document.forms['frmVboxSettings'].vboxSettingsSystemDisableHostTimeSync.checked;
-		$('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.LargePages = document.forms['frmVboxSettings'].settingsSystemLargePages.checked;
-		$('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.UnrestrictedExecution = ($('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.Enabled && document.forms['frmVboxSettings'].settingsSystemUnrestrictedExecution.checked ? true : false);
-		$('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.VPID = $('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.Enabled && document.forms['frmVboxSettings'].settingsSystemVPID.checked;
+		$('#vboxSettingsDialog').data('vboxMachineData').pageFusionEnabled = (document.forms['frmVboxSettings'].vboxSettingsSystemPageFusion.checked ? 1 : 0);
+		$('#vboxSettingsDialog').data('vboxMachineData').HPETEnabled = (document.forms['frmVboxSettings'].vboxSettingsSystemHPET.checked ? 1 : 0);
+		$('#vboxSettingsDialog').data('vboxMachineData').disableHostTimeSync = (document.forms['frmVboxSettings'].vboxSettingsSystemDisableHostTimeSync.checked ? 1 : 0);
+		$('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.LargePages = (document.forms['frmVboxSettings'].settingsSystemLargePages.checked ? 1 : 0);
+		$('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.UnrestrictedExecution = ($('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.Enabled && document.forms['frmVboxSettings'].settingsSystemUnrestrictedExecution.checked ? 1 : 0);
+		$('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.VPID = ($('#vboxSettingsDialog').data('vboxMachineData').HWVirtExProperties.Enabled && document.forms['frmVboxSettings'].settingsSystemVPID.checked ? 1 : 0);
 	}
 	
 	// Boot order

@@ -1,9 +1,9 @@
 <!-- 
 
 	User list
-	Copyright (C) 2010-2015 Ian Moore (imoore76 at yahoo dot com)
+	Copyright (C) 2010-2013 Ian Moore (imoore76 at yahoo dot com)
 	
-	$Id: settingsGlobalUsers.html 595 2015-04-17 09:50:36Z imoore76 $
+	$Id: settingsGlobalUsers.html 569 2013-10-17 16:57:52Z imoore76 $
 
  -->
 <div>
@@ -31,14 +31,14 @@
 /* Build Toolbar */
 
 /*
- * Init Users buttons and toolbar
+ * Init Shared Folder buttons and toolbar
  */
 
 var sButtons = new Array(
 
 	{
 		'name' : 'addUser',
-		'label' : 'Add User',
+		'label' : trans('Add User','UIUsers'),
 		'icon' : 'vm_new',
 		'click' : function () {
 	
@@ -54,7 +54,7 @@ var sButtons = new Array(
 					var u = $('#vboxUserEdit').find('input[name=username]').first().val();
 					var p1 = $('#vboxUserEdit').find('input[name=npass1]').first().val();
 					var p2 = $('#vboxUserEdit').find('input[name=npass2]').first().val();
-					var a = $('#vboxUserEdit').find('input[name=admin]').first().prop('checked');
+					var a = ($('#vboxUserEdit').find('input[name=admin]').first().prop('checked') ? 1 : 0);
 					if(u.length == 0) {
 						$(this).remove();
 						return;
@@ -92,7 +92,7 @@ var sButtons = new Array(
 
 	{
 		'name' : 'delUser',
-		'label' : 'Remove User',
+		'label' : trans('Remove User','UIUsers'),
 		'icon' : 'vm_delete',
 		'noDisabledIcon' : true,
 		'enabled' : function (item) { return (item && $(item).data('username') && $(item).data('username') != $('#vboxPane').data('vboxSession').user); },
@@ -116,7 +116,7 @@ var sButtons = new Array(
 	},
 	{
 		'name' : 'chpwUser',
-		'label' : 'Change Password',
+		'label' : trans('Change Password','UIUsers'),
 		'icon' : 'register',
 		'noDisabledIcon' : true,
 		'enabled' : function (item) { return (item && $(item).data('username') && $(item).data('username') == $('#vboxPane').data('vboxSession').user); },
@@ -169,7 +169,7 @@ var sButtons = new Array(
 	},
 	{
 		'name' : 'editUser',
-		'label' : 'Edit User',
+		'label' : trans('Edit User','UIUsers'),
 		'icon' : 'register',
 		'noDisabledIcon' : true,
 		'enabled' : function (item) { return (item && $(item).data('username') && $(item).data('username') != $('#vboxPane').data('vboxSession').user); },
@@ -192,7 +192,7 @@ var sButtons = new Array(
 					
 					var p1 = $('#vboxUserEdit').find('input[name=npass1]').first().val();
 					var p2 = $('#vboxUserEdit').find('input[name=npass2]').first().val();
-					var a = $('#vboxUserEdit').find('input[name=admin]').first().prop('checked');
+					var a = ($('#vboxUserEdit').find('input[name=admin]').first().prop('checked') ? 1 : 0);
 					
 					if(p1.length > 0 && (p1 != p2)) {
 						vboxAlert(trans('The passwords you have entered do not match.','UIUsers'),{'width':'auto'});
@@ -223,7 +223,7 @@ var sButtons = new Array(
 	}
 );
 
-var userToolbar = new vboxToolbarSmall({buttons: sButtons, language_context: 'UIUsers'});
+var userToolbar = new vboxToolbarSmall(sButtons);
 userToolbar.disabledString = 'dis';
 userToolbar.renderTo('vboxSettingsGlobalUsersToolbar');
 $('#vboxSettingsUserList').on('select', function(e,el){userToolbar.update(el);});
@@ -255,5 +255,22 @@ for(var i in users) {
 }
 $('#vboxSettingsUserList').trigger('select',null);
 
+
+
+/* 
+ * 
+ * Update Data onSave() 
+ * 
+ */
+$('#vboxSettingsDialog').on('save',function(){
+	return;
+});
+
+/*
+ * Remove dialogs on close
+ */
+$('#vboxSettingsDialog').on('close',function(){
+	return;
+});
  
 </script>

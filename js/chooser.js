@@ -2,8 +2,8 @@
  *
  * @fileOverview Chooser (vm list) singleton. Provides vboxChooser
  * @author Ian Moore (imoore76 at yahoo dot com)
- * @version $Id: chooser.js 591 2015-04-11 22:40:47Z imoore76 $
- * @copyright Copyright (C) 2010-2015 Ian Moore (imoore76 at yahoo dot com)
+ * @version $Id: chooser.js 575 2013-11-20 17:25:17Z imoore76 $
+ * @copyright Copyright (C) 2010-2013 Ian Moore (imoore76 at yahoo dot com)
  *
  */
 
@@ -28,7 +28,7 @@ var vboxChooser = {
 	vms : {},
 	
 	// VM tool tip
-	_vmToolTip : '<nobr>%1<br></nobr><nobr>%2 since %3</nobr><br><nobr>Session %4</nobr>',
+	_vmToolTip : trans('<nobr>%1<br></nobr><nobr>%2 since %3</nobr><br><nobr>Session %4</nobr>','UIVMListView'),
 	
 	// Anchor element
 	_anchorid : null,
@@ -117,26 +117,20 @@ var vboxChooser = {
 		
 			// Group menu
 			case 'group':
-				vboxChooser._vmGroupContextMenuObj = new vboxMenu({'name': vboxChooser._anchorid+'vmgroups',
-				                                                   'menuItems': menuitems,
-				                                                   'language_context': 'UIActionPool'});
+				vboxChooser._vmGroupContextMenuObj = new vboxMenu(vboxChooser._anchorid+'vmgroups',null,menuitems);
 				vboxChooser._vmGroupContextMenuObj.update();
 				break;
 				
 			// VM Menu
 			case 'vm':
-				vboxChooser._vmContextMenuObj = new vboxMenu({'name': vboxChooser._anchorid+'vms',
-				                                              'menuItems': menuitems,
-				                                              'language_context': 'UIActionPool'});
+				vboxChooser._vmContextMenuObj = new vboxMenu(vboxChooser._anchorid+'vms',null,menuitems);
 				vboxChooser._vmContextMenuObj.update();
 				break;
 				
 			// Main list menu
 			case 'anchor':
 
-				var vboxChooserPaneMenu = new vboxMenu({'name': vboxChooser._anchorid+'Pane',
-				                                        'menuItems': menuitems,
-				                                        'language_context': 'UIActionPool'});			
+				var vboxChooserPaneMenu = new vboxMenu(vboxChooser._anchorid+'Pane',null,menuitems);			
 				$('#'+vboxChooser._anchorid).parent().contextMenu({
 				  		menu: vboxChooserPaneMenu.menuId()
 				  	},
@@ -693,9 +687,7 @@ var vboxChooser = {
 			
 
 			// Table gets tool tips
-			tip = trans(vboxChooser._vmToolTip, 'UIVMListView').replace('%1',('<b>'+$('<span />')
-				.text(vmn.name).html()+'</b>'+(vmn.currentSnapshotName ? ' (' + $('<span />')
-						.text(vmn.currentSnapshotName).html() + ')' : '')))
+			tip = vboxChooser._vmToolTip.replace('%1',('<b>'+$('<span />').text(vmn.name).html()+'</b>'+(vmn.currentSnapshotName ? ' (' + $('<span />').text(vmn.currentSnapshotName).html() + ')' : '')))
 				.replace('%2',trans(vboxVMStates.convert(vmn.state),'VBoxGlobal'))
 				.replace('%3',vboxDateTimeString(vmn.lastStateChange))
 				.replace('%4',trans(vmn.sessionState,'VBoxGlobal').toLowerCase());
@@ -2265,12 +2257,11 @@ $(document).ready(function(){
 					
 				/////////////////////////////////
 				//
-				// Snapshot taken / deleted / restored
+				// Snapshot taken / deleted
 				//
 				/////////////////////////////////
 				case 'OnSnapshotDeleted':
 				case 'OnSnapshotTaken':
-				case 'OnSnapshotRestored':
 				case 'OnSnapshotChanged':
 					redrawVMs[redrawVMs.length] = eventList[i].machineId;
 					break;

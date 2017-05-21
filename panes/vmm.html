@@ -1,9 +1,9 @@
 <!-- 
 
 	Virtual Media Manager
-	Copyright (C) 2010-2015 Ian Moore (imoore76 at yahoo dot com)
+	Copyright (C) 2010-2013 Ian Moore (imoore76 at yahoo dot com)
 	
-	$Id: vmm.html 595 2015-04-17 09:50:36Z imoore76 $
+	$Id: vmm.html 543 2013-08-08 15:46:34Z imoore76 $
 
  -->
 <table id='vboxVirtualMediaManager' style='height: 100%; border:0px;margin:0px;padding:0px;width:100%;border-spacing:0px;border-width:0px;'>
@@ -24,7 +24,7 @@
 	<div id='vboxVMMTabs'>
 
 		<ul id='vboxVMMTabList'>
-			<li><a href="#vmmDisks"><span><img id='vmmDisksIcon' style="height:16px;width:16px;vertical-align: middle" src="images/vbox/hd_16px.png" border="0" /> <span class='translate'>Hard disks</span></span></a></li>
+			<li><a href="#vmmDisks"><span><img id='vmmDisksIcon' style="height:16px;width:16px;vertical-align: middle" src="images/vbox/hd_16px.png" border="0" /> <span class='translate'>Hard drives</span></span></a></li>
 			<li><a href="#vmmCDs"><span><img id='vmmCDsIcon' style="height:16px;width:16px;vertical-align: middle" src="images/vbox/cd_16px.png" border="0" /> <span class='translate'>Optical disks</span></span></a></li>
 			<li><a href="#vmmFloppys"><span><img id='vmmFloppysIcon' style="height:16px;width:16px;vertical-align: middle" src="images/vbox/fd_16px.png" border="0" /> <span class='translate'>Floppy disks</span></span></a></li>		
 		</ul>
@@ -82,15 +82,11 @@
 					<tr>
 						<th><span class='translate'>Storage details:</span></th>
 						<td><input class='vmmMediumHDDetails' type='text' style='width:100%;border:0px solid transparent;background:transparent;' value='' readonly spellcheck='false'/></td>
-					</tr>				
+					</tr>					
 					<tr>
 						<th><span class='translate'>Attached to:</span></th>
 						<td><input class='vmmMediumAttachedTo' type='text' style='width:100%;border:0px solid transparent;background:transparent;' value='' readonly spellcheck='false'/></td>
 					</tr>
-                    <tr>
-                        <th><span class='translate'>UUID:</span></th>
-                        <td><input class='vmmMediumUUID' type='text' style='width:100%;border:0px solid transparent;background:transparent;' value='' readonly spellcheck='false'/></td>
-                    </tr>
 					<tr class='vmmAccessErr'>
 						<td colspan='2'></td>
 					</tr>
@@ -143,10 +139,6 @@
 						<th><span class='translate'>Attached to:</span></th>
 						<td><input class='vmmMediumAttachedTo' type='text' style='width:100%;border:0px solid transparent;background:transparent;' value='' readonly spellcheck='false'/></td>
 					</tr>
-                    <tr>
-                        <th><span class='translate'>UUID:</span></th>
-                        <td><input class='vmmMediumUUID' type='text' style='width:100%;border:0px solid transparent;background:transparent;' value='' readonly spellcheck='false'/></td>
-                    </tr>
 					<tr class='vmmAccessErr'>
 						<td colspan='2'></td>
 					</tr>					
@@ -196,10 +188,6 @@
 						<th><span class='translate'>Attached to:</span></th>
 						<td><input class='vmmMediumAttachedTo' type='text' style='width:100%;border:0px solid transparent;background:transparent;' value='' readonly spellcheck='false'/></td>
 					</tr>
-                    <tr>
-                        <th><span class='translate'>UUID:</span></th>
-                        <td><input class='vmmMediumUUID' type='text' style='width:100%;border:0px solid transparent;background:transparent;' value='' readonly spellcheck='false'/></td>
-                    </tr>
 					<tr class='vmmAccessErr'>
 						<td colspan='2'></td>
 					</tr>					
@@ -284,7 +272,7 @@ var vmmButtons = new Array(
 		 *	Create new HardDisk
 		 */
 		'name' : 'vmmnew',
-		'label' : 'New',
+		'label' : trans('New','VBoxMediaManagerDlg'),
 		'icon' : 'hd_new',
 		'enabled' : function (item) { return(!$("#vboxVMMTabs").tabs('option','active')); },
 		'click' : function () {
@@ -299,7 +287,7 @@ var vmmButtons = new Array(
 		 * Add existing medium to virtualbox
 		 */
 		'name' : 'vmmadd',
-		'label' : 'Add',
+		'label' : trans('Add','VBoxMediaManagerDlg'),
 		'icon' : 'hd_add',
 		'click' : function () {
 			var type = '';
@@ -334,10 +322,10 @@ var vmmButtons = new Array(
 				var frm = document.forms.vboxISCSIForm;
 				var server = $(frm.vboxISCSIServer).val();
 				var port = $(frm.vboxISCSIPort).val();
-				var intnet = frm.vboxISCSIIntnet.checked;
+				var intnet = (frm.vboxISCSIIntnet.checked ? 1 : 0);
 				var target = $(frm.vboxISCSITarget).val();
 				var lun = $(frm.vboxISCSILun).val();
-				var enclun = frm.vboxISCSILunEnc.checked;
+				var enclun = (frm.vboxISCSILunEnc.checked ? 1 : 0);
 				var user = $(frm.vboxISCSIUser).val();
 				var pass = $(frm.vboxISCSIPass).val();
 				
@@ -377,7 +365,7 @@ var vmmButtons = new Array(
 		 *	Copy Medium
 		 */
 		'name' : 'vmmcopy',
-		'label' : 'Copy...',
+		'label' : trans('Copy...','VBoxMediaManagerDlg'),
 		'icon' : 'vdm_add',
 		'separator' : $('#vboxPane').data('vboxConfig').enableAdvancedConfig,
 		'enabled' : function (item) {
@@ -411,7 +399,7 @@ var vmmButtons = new Array(
 		 *	Modify Medium
 		 */
 		'name' : 'vmmmodify',
-		'label' : 'Modify...',
+		'label' : trans('Modify...','VBoxMediaManagerDlg'),
 		'icon' : 'vdm_new',
 		'enabled' : function (item) { 
 			if(!item) return false;
@@ -463,7 +451,7 @@ var vmmButtons = new Array(
 			l.addFileToDOM("panes/vmmModify.html",$(d));
 			l.onLoad = function() {
 				
-				var msg = trans('<p>You are about to change the settings of the disk image file <b>%1</b>.</p><p>Please choose one of the following modes and press <b>%2</b> to proceed or <b>%3</b> otherwise.</p>','UIMediumTypeChangeDialog');
+				var msg = trans('<p>You are about to change the attributes of the virtual disk located in <b>%1</b>.</p><p>Please choose one of the following medium types and press <b>%2</b> to proceed or <b>%3</b> otherwise.</p>','UIMediumTypeChangeDialog');
 				var title = trans('Modify medium attributes','UIMediumTypeChangeDialog');
 				
 				msg = msg.replace('%1',med.location).replace('%2',trans('OK','QIMessageBox')).replace('%3',trans('Cancel','QIMessageBox'));
@@ -475,7 +463,7 @@ var vmmButtons = new Array(
 				
 				$('#vboxVMMModify').find(".translate").html(function(i,h){return trans(h,'UIMediumTypeChangeDialog');}).removeClass('translate');
 
-				$('#vboxVMMModify').find('table.vboxOptions').find('span').html(function(i,h){return trans(h,'VBoxGlobal', 'MediumType');});
+				$('#vboxVMMModify').find('table.vboxOptions').find('span').html(function(i,h){return trans(h,'VBoxGlobal');});
 				
 				// Set correct option
 				$('#vboxVMMModify').find('input').prop('checked',false);
@@ -493,7 +481,7 @@ var vmmButtons = new Array(
 		 *	Remove a medium
 		 */
 		'name' : 'vmmremove',
-		'label' : 'Remove',
+		'label' : trans('Remove','VBoxMediaManagerDlg'),
 		'icon' : 'hd_remove',
 		'enabled' : function (item) {
 			if(!item || item.target) return false;
@@ -526,11 +514,10 @@ var vmmButtons = new Array(
 			if(m.deviceType == 'HardDisk' && $('#vboxPane').data('vboxConfig').deleteOnRemove && m.format != 'iSCSI') {
 
 				
-				q = trans('<p>Do you want to delete the storage unit of the virtual hard disk <nobr><b>%1</b></nobr>?'+
-				        '</p><p>If you select <b>Delete</b> then the specified storage unit will be permanently deleted. '+
-				        'This operation <b>cannot be undone</b>.</p><p>If you select <b>Keep</b> then the hard disk will '+
-				        'be only removed from the list of known hard disks, but the storage unit will be left untouched '+
-				        'which makes it possible to add this hard disk to the list later again.</p>','UIMessageCenter').replace('%1',m.location);
+				q = trans('<p>Do you want to delete the storage unit of the hard disk <nobr><b>%1</b></nobr>?</p><p>If you select <b>Delete</b> ' +
+						'then the specified storage unit will be permanently deleted. This operation <b>cannot be undone</b>.</p><p>If you select '+
+						'<b>Keep</b> then the hard disk will be only removed from the list of known hard disks, but the storage unit will be left '+
+						'untouched which makes it possible to add this hard disk to the list later again.</p>','UIMessageCenter').replace('%1',m.location);
 				
 				buttons[trans('Delete','UIMessageCenter')] = function(){
 					$.when(vboxAjaxRequest('mediumRemove',{'medium':m.location,'type':m.deviceType,'delete':1})).done(function(ret){
@@ -583,7 +570,7 @@ var vmmButtons = new Array(
 		 *	Release a medium from all attachments
 		 */
 		'name' : 'vmmrelease',
-		'label' : 'Release',
+		'label' : trans('Release','VBoxMediaManagerDlg'),
 		'icon' : 'hd_release',
 		'enabled' : function (item) {
 			if(!item || item.target) return false;
@@ -610,8 +597,7 @@ var vmmButtons = new Array(
 			
 			
 			var m = vboxMedia.getMediumById($(elm).find('tr.vboxListItemSelected').first().data('medium'));
-			var q = trans('<p>Are you sure you want to release the disk image file <nobr><b>%1</b></nobr>?</p><p>This will detach it from the following virtual machine(s): <b>%2</b>.</p>','UIMessageCenter');
-			q = q.replace('%1',m.location);
+			var q = trans('<p>Are you sure you want to release the %1 <nobr><b>%2</b></nobr>?</p><p>This will detach it from the following virtual machine(s): <b>%3</b>.</p>','UIMessageCenter').replace('%1',trans(mtype,'UIMessageCenter')).replace('%2',m.location);
 			
 			var buttons = {};
 			buttons[trans('Release','UIMessageCenter')] = function(){
@@ -633,7 +619,7 @@ var vmmButtons = new Array(
 				for(var i = 0; i < m.attachedTo.length; i++) {
 					machines[machines.length] = m.attachedTo[i].machine;
 				}
-				q = q.replace('%2','<b>'+machines.join('</b>, <b>') + '</b>');
+				q = q.replace('%3','<b>'+machines.join('</b>, <b>') + '</b>');
 			};
 			
 			
@@ -643,7 +629,7 @@ var vmmButtons = new Array(
 	
 	{
 		'name' : 'vmmrefresh',
-		'label' : 'Refresh',
+		'label' : trans('Refresh','VBoxMediaManagerDlg'),
 		'icon' : 'refresh',
 		'click' : function () {
 
@@ -667,15 +653,15 @@ if(!$('#vboxPane').data('vboxConfig').enableAdvancedConfig) {
 }
 
 /* Toolbar */
-var vmmToolbar = new vboxToolbar({buttons: vmmButtons,
-    language_context: 'VBoxMediaManagerDlg',
-    renderTo: 'vboxMMToolbar'});
+var vmmToolbar = new vboxToolbar(vmmButtons);
+vmmToolbar.renderTo('vboxMMToolbar');
 
 /* Actions Menu */
-var vmmMenu = new vboxMenuBar({name: 'vboxMMMenu', language_context: 'VBoxMediaManagerDlg'});
+var vmmMenu = new vboxMenuBar('vboxMMMenu');
+vmmMenu.iconStringDisabled = '_disabled';
 vmmMenu.addMenu({
 	'name':'vboxMMactions',
-	'label':'Actions',
+	'label':trans('Actions','VBoxMediaManagerDlg'),
 	'menu': vmmButtons
 });
 vmmMenu.renderTo('vboxMMMenu');
@@ -689,8 +675,9 @@ if($('#vboxPane').data('vboxConfig').enableAdvancedConfig) {
 } else {
 	vmmCMButtons = vmmButtons.slice(0,-1);
 }
-var vmmCMenu = new vboxMenu({name: 'vboxVMMMediaContextMenu', menuItems: vmmCMButtons,
-    language_context: 'VBoxMediaManagerDlg'});
+var vmmCMenu = new vboxMenu('vboxVMMMediaContextMenu');
+vmmCMenu.iconStringDisabled = '_disabled';
+vmmCMenu.addMenu(vmmCMButtons);
 
 
 /**
@@ -717,16 +704,13 @@ function vboxVMMMediaInfo(med) {
 	if(m) {
 		attch = vboxMedia.attachedTo(m,true);
 		if(!attch) {
-			attch = trans('Not Attached','UIGDetails','details (storage)');
+			attch = trans('Not Attached','UIDetailsPagePrivate');
 			attchElm.css({'font-style':'italic'});
 		}
 		attchElm.val(attch);
 	} else {
 		attchElm.val('--');
 	}
-	
-	// UUID
-	$('#vboxVirtualMediaManager').find('.vmmMediumUUID').val(m ? m.id : '--');
 	
 	if(m && m.state == 'Inaccessible' && m.lastAccessError) {
 		$('#vboxVirtualMediaManager').find('tr.vmmAccessErr').css({'display':''}).children().html(m.lastAccessError);

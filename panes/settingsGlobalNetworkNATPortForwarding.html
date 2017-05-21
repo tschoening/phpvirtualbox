@@ -1,8 +1,8 @@
 <!--
 	NAT Network Port Forwarding Settings
-	Copyright (C) 2010-2015 Ian Moore (imoore76 at yahoo dot com)
+	Copyright (C) 2010-2013 Ian Moore (imoore76 at yahoo dot com)
 	
-	$Id: settingsGlobalNetworkNATPortForwarding.html 595 2015-04-17 09:50:36Z imoore76 $ 
+	$Id: settingsGlobalNetworkNATPortForwarding.html 570 2013-10-17 18:24:19Z imoore76 $ 
  -->
 <div id='vboxSettingsGlobalNetworkNatPortForwardingDialog' style='padding: 4px'>
 <ul>
@@ -68,7 +68,7 @@
 var sButtons = new Array(
 	{
 		'name' : 'insportfwd',
-		'label' : 'Insert new rule',
+		'label' : trans('Insert new rule','UIMachineSettingsPortForwardingDlg'),
 		'icon' : 'controller_add',
 		'click' : function (e) {
 			var listId = $(e.target).closest('div.vboxTabContent').find('tbody.vboxSettingsGlobalNetworkNatPortForwardingList').first().attr('id');
@@ -89,7 +89,7 @@ var sButtons = new Array(
 	},
 	{
 		'name' : 'delportfwd',
-		'label' : 'Delete selected rule',
+		'label' : trans('Delete selected rule','UIMachineSettingsPortForwardingDlg'),
 		'icon' : 'controller_remove',
 		'click' : function (e) {
 			var listId = $(e.target).closest('div.vboxTabContent').find('tbody.vboxSettingsGlobalNetworkNatPortForwardingList').first().attr('id');
@@ -100,13 +100,13 @@ var sButtons = new Array(
 	}
 );
 
-var pfToolbarIPv4 = new vboxToolbarSmall({buttons: sButtons, language_context: 'UIMachineSettingsPortForwardingDlg'});
+var pfToolbarIPv4 = new vboxToolbarSmall(sButtons);
 pfToolbarIPv4.renderTo('vboxSettingsGlobalNetworkNatPortForwardingToolbarIPv4');
 $('#vboxSettingsGlobalNetworkNatPortForwardingListIPv4').on('select',function(e,el){pfToolbarIPv4.update(el);});
 $('#vboxSettingsGlobalNetworkNatPortForwardingListIPv4').trigger('select');
 
 
-var pfToolbarIPv6 = new vboxToolbarSmall({buttons: sButtons, language_context: 'UIMachineSettingsPortForwardingDlg'});
+var pfToolbarIPv6 = new vboxToolbarSmall(sButtons);
 pfToolbarIPv6.renderTo('vboxSettingsGlobalNetworkNatPortForwardingToolbarIPv6');
 $('#vboxSettingsGlobalNetworkNatPortForwardingListIPv6').on('select',function(e,el){pfToolbarIPv6.update(el);});
 $('#vboxSettingsGlobalNetworkNatPortForwardingListIPv6').trigger('select');

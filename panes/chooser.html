@@ -1,9 +1,9 @@
 <!-- 
 
 	Virtual Machine List
-	Copyright (C) 2010-2015 Ian Moore (imoore76 at yahoo dot com)
+	Copyright (C) 2010-2013 Ian Moore (imoore76 at yahoo dot com)
 	
-	$Id: chooser.html 595 2015-04-17 09:50:36Z imoore76 $
+	$Id: chooser.html 547 2013-08-10 14:22:33Z imoore76 $
 	
 	@see js/chooser.js
 
@@ -24,22 +24,22 @@ vboxChooser.setAnchorId('vboxChooserDiv');
 // Stop actions
 var sChildren = [];
 for(var i = 0; i < vboxVMActions.stop_actions.length; i++) {
-	sChildren[sChildren.length] = $.extend(true,{},vboxVMActions[vboxVMActions.stop_actions[i]],{'iconStringDisabled':'_disabled'});
+	sChildren[sChildren.length] = $.extend(true,{},vboxVMActions[vboxVMActions.stop_actions[i]],{'name':vboxVMActions.stop_actions[i],'iconStringDisabled':'_disabled'});
 }
 
 // VM List Group context menu
 vboxChooser.setContextMenu('group', [
-	vboxVMGroupActions['newmachine'],
-	vboxVMGroupActions['addmachine'],
-	$.extend({}, vboxVMGroupActions['rename'], {separator: true}),
-	vboxVMGroupActions['ungroup'],
-	$.extend({}, vboxVMActions['start'], {'separator' : true}),
-    vboxVMActions['pause'],
-    vboxVMActions['reset'],
-	$.extend({},vboxVMActions['stop'], {'children':sChildren}),
-	$.extend({},vboxVMActions['discard'], {separator: true}),
-	vboxVMActions['refresh'],
-	$.extend({}, vboxVMGroupActions['sort'], {separator:true}),
+	$.extend({}, vboxVMGroupActions['newmachine'], {name:'newmachine'}),
+	$.extend({}, vboxVMGroupActions['addmachine'], {name:'addmachine'}),
+	$.extend({}, vboxVMGroupActions['rename'], {name:'rename',separator:true}),
+	$.extend({}, vboxVMGroupActions['ungroup'], {name:'ungroup'}),
+	$.extend({},vboxVMActions['start'],{'name':'start','separator' : true}),
+    $.extend({},vboxVMActions['pause'],{'name':'pause'}),
+    $.extend({},vboxVMActions['reset'],{'name':'reset'}),
+	$.extend({},vboxVMActions['stop'],{'name':'stop','children':sChildren}),
+	$.extend({},vboxVMActions['discard'],{'name':'discard','separator' : true}),
+	$.extend({},vboxVMActions['refresh'],{'name':'refresh'}),
+	$.extend({}, vboxVMGroupActions['sort'], {name:'sort',separator:true}),
 ]);
 
 
@@ -48,17 +48,17 @@ vboxChooser.setContextMenu('group', [
  */
  
 vboxChooser.setContextMenu('vm',[
-   	vboxVMActions['settings'],
-   	vboxVMActions['clone'],
-   	vboxVMActions['remove'],
-   	vboxVMActions['group'],
-   	$.extend({},vboxVMActions['start'], {'separator' : true}),
-    vboxVMActions['pause'],
-    vboxVMActions['reset'],
-   	$.extend({},vboxVMActions['stop'], {'children': sChildren}),
-   	$.extend({},vboxVMActions['discard'], {'separator' : true}),
-   	vboxVMActions['logs'],
-   	vboxVMActions['refresh']
+   	$.extend({},vboxVMActions['settings'],{'name':'settings'}),
+   	$.extend({},vboxVMActions['clone'],{'name':'clone'}),
+   	$.extend({},vboxVMActions['remove'],{'name':'remove'}),
+   	$.extend({},vboxVMActions['group'],{'name':'group'}),
+   	$.extend({},vboxVMActions['start'],{'name':'start','separator' : true}),
+    $.extend({},vboxVMActions['pause'],{'name':'pause'}),
+    $.extend({},vboxVMActions['reset'],{'name':'reset'}),
+   	$.extend({},vboxVMActions['stop'],{'name':'stop','children':sChildren}),
+   	$.extend({},vboxVMActions['discard'],{'name':'discard','separator' : true}),
+   	$.extend({},vboxVMActions['logs'],{'name':'logs'}),
+   	$.extend({},vboxVMActions['refresh'],{'name':'refresh'})
 ]);
 
 // Don't need thse anymore
@@ -68,11 +68,11 @@ sChildren = null;
  * VM list context menu setup
  */
 vboxChooser.setContextMenu('anchor', [
-	vboxVMActions['new'],
-	vboxVMActions['add'],
+	$.extend({},vboxVMActions['new'],{'name':'new'}),
+	$.extend({},vboxVMActions['add'],{'name':'add'}),
 	{
 		'name':'fileImport',
-		'label':'Import Appliance...',
+		'label':trans('Import Appliance...','UIActionPool'),
 		'icon':'import',
 		'click':function(){
 			new vboxWizardImportApplianceDialog().run();
@@ -81,11 +81,11 @@ vboxChooser.setContextMenu('anchor', [
 	},
 	{
 		'name':'fileExport',
-		'label':'Export Appliance...',
+		'label':trans('Export Appliance...','UIActionPool'),
 		'icon':'export',
 		'click':function(){new vboxWizardExportApplianceDialog().run(); }
 	},
-	$.extend({},vboxVMGroupActions['sort'],{'separator':true,click:function(){
+	$.extend({},vboxVMGroupActions['sort'],{'name':'sort','separator':true,click:function(){
 		vboxChooser.sortSelectedGroup(true);
 	}})
 ]);

@@ -1,9 +1,9 @@
 <!-- 
 
 	VM Details Pane
-	Copyright (C) 2010-2015 Ian Moore (imoore76 at yahoo dot com)
+	Copyright (C) 2010-2013 Ian Moore (imoore76 at yahoo dot com)
 	
-	$Id: tabVMDetails.html 596 2015-04-19 11:50:53Z imoore76 $
+	$Id: tabVMDetails.html 571 2013-10-17 19:51:10Z imoore76 $
 
  -->
 <div id='vboxTabVMDetails' style='height: 100%; width: 100%; display: none;' class='vboxInvisible'>
@@ -325,7 +325,7 @@ $('#vboxTabVMDetails').on('hide',function(){
 
 //Base function that returns a table row of machine detail data
 //Called from other functions
-function __vboxDetailRow(name, value, cssClass, html) {
+function __vboxDetailRow(name,value,cssClass,html) {
 	
 	// convert to strings
 	if(typeof(value) == 'undefined') value = '';
@@ -374,12 +374,7 @@ function __vboxDetailAddRows(data, rows, table) {
 		if(rows[i].rawRow) {
 			$(table).append(rowData);
 		} else {
-		    var title = trans(rows[i].title, rows[i].language_context);
-			$(table).append(__vboxDetailRow(
-			        title,
-			        rowData, 
-			        'vboxDetailName ' + (rows[i].indented ? ' vboxDetailNameIndent' : '') + ' ' + (rows[i].cssClass ? rows[i].cssClass : ''),
-			        rows[i].html));
+			$(table).append(__vboxDetailRow(rows[i].title, rowData, 'vboxDetailName' + (rows[i].indented ? ' vboxDetailNameIndent' : ''), rows[i].html));
 		}
 		
 	}
@@ -400,7 +395,6 @@ function __vboxCreateDetailsSection(data, sectionName, section) {
 		links = false;
 	}
 
-	var title = trans(section.title, section.language_context);
 	var vboxDetailsTable = $('<table />')
 		.attr({'class':'vboxDetailsTable vboxDetailsTableBox'})
 		.append($('<thead />')
@@ -413,7 +407,7 @@ function __vboxCreateDetailsSection(data, sectionName, section) {
 							$('<span />').css({'float':'left'}).addClass((links ? 'vboxDetailsSectionLink' : '')).click(function(){
 								if($(this).hasClass('vboxDetailsSectionLink'))
 									vboxVMsettingsDialog(data,section.settingsLink);
-							}).html(title)
+							}).html(section.title)
 						).append(
 							$('<span />').addClass('vboxArrowImage')
 								.click(function(){ $(this).parent().trigger("dblclick"); })
@@ -530,24 +524,20 @@ function __vboxDisplayDetailsData(data, multiSelect, targetDiv, skipTable) {
 	// Multi-select details table sections
 	////////////////////////////////////////
 	if(!skipTable) {
-
+		
 		var tbl = $('<table />').attr({'id':'vboxDetailsGeneralTable-'+data.id,'class':'vboxInvisible vboxVMDetailsBox-vm-'+data.id,'style':'width: 100%;'}).append(
 	
-			$('<tr />').attr({'style':'vertical-align: top'})
+			$('<tr />').attr({'style':'vertical-align: top'}).append(
+	
+				$('<td />').css({'width':'100%'})
+					.append(__vboxCreateDetailsSection(data,'general'))
+					.append(__vboxCreateDetailsSection(data,'system'))
 			
-    			.append(
-    	
-    				$('<td />').css({'width':'100%'})
-    					.append(__vboxCreateDetailsSection(data,'general'))
-    					.append(__vboxCreateDetailsSection(data,'system'))
-    			
-    			).append(
-    
-			        vboxVMDetailsSections['preview'].condition() ?
-        				$('<td />')
-        					.append(__vboxCreateDetailsSection(data,'preview')) :
-        				null
-    			)
+			).append(
+					
+				$('<td />')
+					.append(__vboxCreateDetailsSection(data,'preview'))
+			)
 			
 		).data({'vmid':data.id});
 		
@@ -711,7 +701,7 @@ for(var i in vboxVMDetailsSections) {
 				})
 				
 			).append(
-				$('<span />').html(trans(vboxVMDetailsSections[i].title, vboxVMDetailsSections[i].language_context))
+				$('<span />').html(vboxVMDetailsSections[i].title)
 				
 			).disableSelection()
 			

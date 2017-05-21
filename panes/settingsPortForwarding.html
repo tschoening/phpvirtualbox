@@ -1,8 +1,8 @@
 <!--
 	Port Forwarding Settings
-	Copyright (C) 2010-2015 Ian Moore (imoore76 at yahoo dot com)
+	Copyright (C) 2010-2013 Ian Moore (imoore76 at yahoo dot com)
 	
-	$Id: settingsPortForwarding.html 595 2015-04-17 09:50:36Z imoore76 $ 
+	$Id: settingsPortForwarding.html 570 2013-10-17 18:24:19Z imoore76 $ 
  -->
 <div id='vboxSettingsPortForwarding' style='height: 100%'>
 <table class='vboxInvisible'>
@@ -40,7 +40,7 @@ $('#vboxSettingsPortForwarding').find('.translate').html(function(i,h){return tr
 var sButtons = new Array(
 	{
 		'name' : 'insportfwd',
-		'label' : 'Insert new rule',
+		'label' : trans('Insert new rule','UIMachineSettingsPortForwardingDlg'),
 		'icon' : 'controller_add',
 		'click' : function () {
 			var rname = null;
@@ -60,7 +60,7 @@ var sButtons = new Array(
 	},
 	{
 		'name' : 'delportfwd',
-		'label' : 'Delete selected rule',
+		'label' : trans('Delete selected rule','UIMachineSettingsPortForwardingDlg'),
 		'icon' : 'controller_remove',
 		'click' : function () {
 			$('#vboxSettingsPortForwardingList').children('tr.vboxListItemSelected').first().remove();
@@ -69,7 +69,7 @@ var sButtons = new Array(
 		'enabled' : function(item) {return ((item && $(item).data('vboxRule')) ? true : false);}
 	}
 );
-var pfToolbar = new vboxToolbarSmall({buttons: sButtons, language_context: 'UIMachineSettingsPortForwardingDlg'});
+var pfToolbar = new vboxToolbarSmall(sButtons);
 pfToolbar.renderTo('vboxSettingsPortForwardingToolbar');
 
 

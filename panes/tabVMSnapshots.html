@@ -1,9 +1,9 @@
 <!-- 
 
 	VM Snapshots Pane
-	Copyright (C) 2010-2015 Ian Moore (imoore76 at yahoo dot com)
+	Copyright (C) 2010-2013 Ian Moore (imoore76 at yahoo dot com)
 	
-	$Id: tabVMSnapshots.html 595 2015-04-17 09:50:36Z imoore76 $
+	$Id: tabVMSnapshots.html 572 2013-10-17 21:12:51Z imoore76 $
 
  -->
 <div id='vboxTabVMSnapshots' class='vboxInvisible' style='display: none; width:100%;'>
@@ -86,8 +86,7 @@ var vboxSnapshotButtons = [
             	
   	{
   		'name' : 'take_snapshot',
-  		'label' : 'Take Snapshot...',
-  		'language_context': 'UIActionPool',
+  		'label' : trans('Take Snapshot...','UIActionPool'),
   		'icon' : 'snapshot_take',
   		'enabled' : function(item) {
   			
@@ -150,7 +149,7 @@ var vboxSnapshotButtons = [
 								// callback passed to click()? else Refresh vm list
 								if(typeof callback == 'function') { callback(pres); }
 	
-							},'progress_snapshot_create_90px.png', trans('Take a snapshot of the current virtual machine state','VBoxSnapshotsWgt'),
+							},'progress_snapshot_create_90px.png',trans('Take a snapshot of the current virtual machine state','VBoxSnapshotsWgt'),
 								vm.name);
 							
 						} else {
@@ -191,13 +190,13 @@ var vboxSnapshotButtons = [
   			};
   			buttons[trans('Cancel','QIMessageBox')] = function() { $(this).dialog('close'); };
   			
-  			$('#vboxSnapshotNew').dialog({'closeOnEscape':false,'width':'400px','height':'auto','buttons':buttons,'modal':true,'autoOpen':true,'dialogClass':'vboxDialogContent','title':'<img src="images/vbox/snapshot_take_16px.png" class="vboxDialogTitleIcon" height="16" width="16" /> ' + trans('Take Snapshot of Virtual Machine','VBoxTakeSnapshotDlg')});
+  			$('#vboxSnapshotNew').dialog({'closeOnEscape':false,'width':'400px','height':'auto','buttons':buttons,'modal':true,'autoOpen':true,'dialogClass':'vboxDialogContent','title':'<img src="images/vbox/take_snapshot_16px.png" class="vboxDialogTitleIcon" height="16" width="16" /> ' + trans('Take Snapshot of Virtual Machine','VBoxTakeSnapshotDlg')});
   			
   	  	}
   	},
   	{
   		'name' : 'discard_cur_state',
-  		'label' : 'Restore Snapshot',
+  		'label' : trans('Restore Snapshot','VBoxSnapshotsWgt'),
   		'icon' : 'snapshot_restore',
   		'enabled' : function(item) {
   			var vm = vboxChooser.getSingleSelected();
@@ -285,7 +284,7 @@ var vboxSnapshotButtons = [
   	},
   	{
   		'name' : 'delete_snapshot',
-  		'label' : 'Delete Snapshot',
+  		'label' : trans('Delete Snapshot','VBoxSnapshotsWgt'),
   		'icon' : 'snapshot_delete',
   		'enabled' : function(item) {
   			return (item && $(item).data('vboxSnapshot') && $(item).data('vboxSnapshot').name && $(item).data('vboxSnapshot').state != 'current' && $(item).data('vboxSnapshot').children.length <= 1);
@@ -310,15 +309,12 @@ var vboxSnapshotButtons = [
 
 				l.run();				
 			};
-			vboxConfirm(trans('<p>Deleting the snapshot will cause the state information saved in it to be lost, and '+
-			        'storage data spread over several image files that VirtualBox has created together with the snapshot '+
-			        'will be merged into one file. This can be a lengthy process, and the information in the snapshot cannot '+
-			        'be recovered.</p></p>Are you sure you want to delete the selected snapshot <b>%1</b>?</p>','UIMessageCenter').replace('%1',$('<div />').text(snapshot.name).html()),buttons);  	  		
+			vboxConfirm(trans('<p>Deleting the snapshot will cause the state information saved in it to be lost, and disk data spread over several image files that VirtualBox has created together with the snapshot will be merged into one file. This can be a lengthy process, and the information in the snapshot cannot be recovered.</p></p>Are you sure you want to delete the selected snapshot <b>%1</b>?</p>','UIMessageCenter').replace('%1',$('<div />').text(snapshot.name).html()),buttons);  	  		
   	  	}
   	},
   	{
   		'name' : 'show_snapshot_details',
-  		'label' : 'Show Details',
+  		'label' : trans('Show Details','VBoxSnapshotsWgt'),
   		'icon' : 'snapshot_show_details',
   		'enabled' : function(item) {
   			return (item && $(item).data('vboxSnapshot') && $(item).data('vboxSnapshot').name && $(item).data('vboxSnapshot').state != 'current');
@@ -338,9 +334,7 @@ var vboxSnapshotButtons = [
 				$('#vboxSnapshotDetailsDesc').val(d.responseData.description);
 				
 				if(d.responseData.online) {
-					$('#vboxSnapshotSS').html('<a href="'+ vboxEndpointConfig.screen +'?vm='+vm.id+
-							'&snapshot='+d.responseData.id+'&full=1" target="_blank"><img src="'+vboxEndpointConfig.screen+'?vm='+
-									vm.id+'&snapshot='+d.responseData.id+'" /></a>').show();
+					$('#vboxSnapshotSS').html('<a href="screen.php?vm='+vm.id+'&snapshot='+d.responseData.id+'&full=1" target="_blank"><img src="screen.php?vm='+vm.id+'&snapshot='+d.responseData.id+'" /></a>').show();
 				} else {
 					$('#vboxSnapshotSS').empty().hide();
 				}
@@ -364,7 +358,7 @@ var vboxSnapshotButtons = [
 			  	  		$('<th />').attr({'class':'vboxDetailsSection','colspan':'2'}).disableSelection()
 			  	  			.html("<img style='float:left; margin-right: 3px; ' src='images/vbox/" + section.icon + "' height='16' width='16' /> ")
 			  	  			.append(
-			  	  				$('<span />').css({'float':'left'}).append(document.createTextNode(trans(section.title, section.language_context) +' '))
+			  	  				$('<span />').css({'float':'left'}).append(document.createTextNode(section.title +' '))
 			  	  			)
 			  	  	).appendTo(vboxDetailsTable);
 
@@ -404,8 +398,7 @@ var vboxSnapshotButtons = [
   	},
   	{
   		'name' : 'clone',
-  		'label' : 'Clone...',
-  		'language_context': 'UIActionPool',
+  		'label' : trans('Clone...','UIActionPool'),
   		'icon' : 'vm_clone',
   		'separator' : true,
   		'enabled' : function(item) { 
@@ -430,7 +423,8 @@ var vboxSnapshotButtons = [
 
 
 /* Append Top Toolbar */
-var vboxSnapshotToolbar = new vboxToolbarSmall({buttons: vboxSnapshotButtons, size: 22, language_context: 'VBoxSnapshotsWgt'});
+var vboxSnapshotToolbar = new vboxToolbarSmall(vboxSnapshotButtons);
+vboxSnapshotToolbar.size = 22;
 // special case for 'clone' button because it is 16px rather than 22px
 vboxSnapshotToolbar.addButtonCSS('clone', {'background-position':'6px 4px'});
 vboxSnapshotToolbar.renderTo('vboxSnapshotToolbar');
@@ -438,11 +432,11 @@ vboxSnapshotToolbar.renderTo('vboxSnapshotToolbar');
 vboxInitDisplay('vboxSnapshotToolbar','VBoxSnapshotsWgt');
 
 // Context menu for snapshots
-var vboxSnapshotContextMenu = new vboxMenu({name:'vboxSnapshotContextMenu', language_context: 'VBoxSnapshotsWgt'});
+var vboxSnapshotContextMenu = new vboxMenu('vboxSnapshotContextMenu');
 vboxSnapshotContextMenu.addMenu(vboxSnapshotButtons.slice(-(vboxSnapshotButtons.length-1)));
 
 //Context menu for current state
-var vboxSnapshotContextMenuCurrent = new vboxMenu({name: 'vboxSnapshotContextMenuCurrent', language_context: 'VBoxSnapshotsWgt'});
+var vboxSnapshotContextMenuCurrent = new vboxMenu('vboxSnapshotContextMenuCurrent');
 vboxSnapshotContextMenuCurrent.addMenu([vboxSnapshotButtons[0],vboxSnapshotButtons[(vboxSnapshotButtons.length-2)]]);
 
 
@@ -533,7 +527,6 @@ $('#vboxPane').on('vmSelectionListChanged',function(){
 			/////////////////////////
 			case 'OnSnapshotTaken':
 			case 'OnSnapshotDeleted':
-			case 'OnSnapshotRestored':
 			case 'OnSnapshotChanged':
 
 				// Is this vm selected

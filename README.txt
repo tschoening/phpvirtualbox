@@ -1,6 +1,5 @@
-# About
 
-phpVirtualBox is Copyright (C) 2015 Ian Moore (imoore76 at yahoo dot com)
+phpVirtualBox is Copyright (C) 2011 Ian Moore (imoore76 at yahoo dot com)
 
 FREE, WITHOUT WARRANTY:
 
@@ -12,13 +11,9 @@ the license file, or do not agree with its conditions, please cease using
 this software immediately and remove any copies you may have in your
 possession.
 
-# Installation from Zip file
+INSTALLATION:
 
-1) Download zip file from sourceforge project site: https://sourceforge.net/projects/phpvirtualbox/
-
-2) Rename config.php-example to config.php and edit as needed.
-
-# Post installation
+Rename config.php-example to config.php and edit as needed.
 
 Default login is username: admin password: admin
 
@@ -26,7 +21,7 @@ Please see the wiki located at
 http://sourceforge.net/p/phpvirtualbox/wiki/Home/
 for detailed installation and configuration instructions.
 
-# Password Recovery
+PASSWORD RECOVERY:
 
 Rename the file recovery.php-disabled to recovery.php, navigate to it in
 your web browser, and follow the instructions presented.

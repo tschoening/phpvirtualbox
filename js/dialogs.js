@@ -1,8 +1,8 @@
 /**
  * @fileOverview Dialog logic for various wizards and other dialogs
  * @author Ian Moore (imoore76 at yahoo dot com)
- * @version $Id: dialogs.js 599 2015-07-27 10:40:37Z imoore76 $
- * @copyright Copyright (C) 2010-2015 Ian Moore (imoore76 at yahoo dot com)
+ * @version $Id: dialogs.js 574 2013-10-29 04:35:20Z imoore76 $
+ * @copyright Copyright (C) 2010-2013 Ian Moore (imoore76 at yahoo dot com)
  */
 
 /**
@@ -19,7 +19,7 @@ function vboxWizardImportApplianceDialog() {
 	
 	/* Common settings */
 	this.name = 'wizardImportAppliance';
-	this.title = trans('Import Virtual Appliance','UIWizardImportApp');
+	this.title = trans('Import Virtual Applicance','UIWizardImportApp');
 	this.bg = 'images/vbox/vmw_ovf_import_bg.png';
 	this.icon = 'import';
 	this.steps = 2;
@@ -49,7 +49,7 @@ function vboxWizardImportApplianceDialog() {
 
 		var file = $(self.form).find('[name=wizardImportApplianceLocation]').val();
 		var descriptions = $('#vboxImportProps').data('descriptions');
-		var reinitNetwork = $(self.form).find('[name=vboxImportReinitNetwork]').prop('checked');
+		var reinitNetwork = ($(self.form).find('[name=vboxImportReinitNetwork]').prop('checked') ? 1 : 0);
 		
 		// Check for descriptions
 		if(!descriptions) {
@@ -211,7 +211,7 @@ function vboxWizardExportApplianceDialog() {
 
 			var file = $(self.form).find('[name=wizardExportApplianceLocation]').val();
 			var format = $(self.form).find('[name=wizardExportApplianceFormat]').val();
-			var manifest = $(self.form).find('[name=wizardExportApplianceManifest]').prop('checked');
+			var manifest = ($(self.form).find('[name=wizardExportApplianceManifest]').prop('checked') ? 1 : 0);
 			var overwrite = force;
 			
 			var l = new vboxLoader();
@@ -272,56 +272,6 @@ function vboxWizardExportApplianceDialog() {
 
 	};
 
-}
-
-/**
- * Show the medium encryption dialog
- * 
- * @param {String} context - used in dialog name
- * @param {Array} encIds - encryption ids
- * 
- */
-function vboxMediumEncryptionPasswordsDialog(context, encIds, validIds) {
-    
-    if(!(encIds && encIds.length)) { return []; }
-
-    var results = $.Deferred();
-    
-    var dialogTitle = trans("%1 - Disk Encryption").replace('%1', context);
-    
-    var l = new vboxLoader();
-    l.addFileToDOM("panes/mediumEncryptionPasswords.html");
-    l.onLoad = function() {
-
-        for(var i = 0; i < encIds.length; i++) {    
-            vboxMediumEncryptionPasswordAdd(encIds[i].id, validIds && validIds.length && jQuery.inArray(encIds[i].id, validIds) > -1);
-        }
-        
-        var buttons = {};
-        buttons[trans('OK','QIMessageBox')] = function(){
-            // Get passwords
-            var pws = vboxMediumEncryptionPasswordsGet();
-            if(pws === false)
-                return;
-            
-            $(this).trigger('close').empty().remove();
-            
-            results.resolve(pws);
-        };
-        buttons[trans('Cancel','QIMessageBox')] = function(){
-            results.reject();
-            $(this).trigger('close').empty().remove();
-        };
-
-        $('#vboxMediumEncryptionPasswords').dialog({'closeOnEscape':true,'width':600,'height':400,'buttons':buttons,'modal':true,'autoOpen':true,'dialogClass':'vboxDialogContent','title':'<img src="images/vbox/nw_16px.png" class="vboxDialogTitleIcon" /> ' + dialogTitle}).on("dialogbeforeclose",function(){
-            $(this).parent().find('span:contains("'+trans('Cancel','QIMessageBox')+'")').trigger('click');
-        });
-
-    };
-    
-    l.run()
-    
-    return results.promise();
 }
 
 /**
@@ -506,7 +456,7 @@ function vboxWizardNewVMDialog(vmgroup) {
 						$(this).empty().remove();
 						vboxNewVMFinish();
 					};
-					vboxConfirm(trans('You are about to create a new virtual machine without a hard disk. You will not be able to install an operating system on the machine until you add one. In the mean time you will only be able to start the machine using a virtual optical disk or from the network.','UIMessageCenter'), buttons, trans('Go Back','UIMessageCenter'));
+					vboxConfirm(trans('You are about to create a new virtual machine without a hard drive. You will not be able to install an operating system on the machine until you add one. In the mean time you will only be able to start the machine using a virtual optical disk or from the network.','UIMessageCenter'), buttons, trans('Go Back','UIMessageCenter'));
 					return;
 				}
 				
@@ -574,7 +524,7 @@ function vboxWizardCloneVMDialog(args) {
 		var name = jQuery.trim($(self.form).find('[name=machineCloneName]').val());
 		var src = self.args.vm.id;
 		var snapshot = self.args.snapshot;
-		var allNetcards = $(self.form).find('[name=vboxCloneReinitNetwork]').prop('checked');
+		var allNetcards = ($(self.form).find('[name=vboxCloneReinitNetwork]').prop('checked') ? 1 : 0);
 		
 		if(!name) {
 			$(self.form).find('[name=machineCloneName]').addClass('vboxRequired');
@@ -590,7 +540,7 @@ function vboxWizardCloneVMDialog(args) {
 		}
 		
 		// Full / linked clone
-		var cLink = $(self.form).find('[name=vboxCloneType]').eq(1).prop('checked');
+		var cLink = ($(self.form).find('[name=vboxCloneType]').eq(1).prop('checked') ? 1 : 0);
 		
 		// wrap function
 		var vbClone = function(sn) {
@@ -611,7 +561,7 @@ function vboxWizardCloneVMDialog(args) {
 							}).fail(function(){
 								self.completed.reject();
 							});
-						},'progress_clone_90px.png',trans('Clone selected virtual machine','UIActionPool'),
+						},'progress_clone_90px.png',trans('Clone the selected virtual machine','UIActionPool'),
 						self.args.vm.name + ' > ' + name);
 					} else {
 						self.completed.reject();
@@ -735,13 +685,13 @@ function vboxVMMDialog(select,type,hideDiff,mPath) {
 				$('#vboxVMMDialog').trigger('close').empty().remove();
 			};
 		}
-		buttons[trans('Close','UIMessageCenter')] = function() {
+		buttons[trans('Close','UIMediumManager')] = function() {
 			$('#vboxVMMDialog').trigger('close').empty().remove();
 			results.reject();
 		};
 
 		$("#vboxVMMDialog").dialog({'closeOnEscape':true,'width':800,'height':500,'buttons':buttons,'modal':true,'autoOpen':true,'dialogClass':'vboxDialogContent vboxVMMDialog','title':'<img src="images/vbox/diskimage_16px.png" class="vboxDialogTitleIcon" /> '+trans('Virtual Media Manager','VBoxMediaManagerDlg')}).on("dialogbeforeclose",function(){
-	    	$(this).parent().find('span:contains("'+trans('Close','UIMessageCenter')+'")').trigger('click');
+	    	$(this).parent().find('span:contains("'+trans('Close','VBoxMediaManagerDlg')+'")').trigger('click');
 	    });
 		
 		vboxVMMInit(hideDiff,mPath);
@@ -789,7 +739,7 @@ function vboxWizardNewHDDialog(suggested) {
 	
 	/* Common options */
 	this.name = 'wizardNewHD';
-	this.title = trans('Create Virtual Hard Disk','UIWizardNewVD');
+	this.title = trans('Create Virtual Hard Drive','UIWizardNewVD');
 	this.bg = 'images/vbox/vmw_new_harddisk_bg.png';
 	this.icon = 'hd';
 	this.steps = 3;
@@ -880,7 +830,7 @@ function vboxWizardNewHDDialog(suggested) {
 				           "<p>Please specify a different location.</p>",'UIMessageCenter').replace('%1',file));
 				return;
 			}
-			var fsplit = $(self.form).find('[name=newHardDiskSplit]').prop('checked');
+			var fsplit = ($(self.form).find('[name=newHardDiskSplit]').prop('checked') ? 1 : 0);
 			var size = vboxConvertMbytes($(self.form).find('[name=wizardNewHDSizeValue]').val());
 			var type = ($(self.form).find('[name=newHardDiskType]').eq(1).prop('checked') ? 'fixed' : 'dynamic');
 			var nl = new vboxLoader('mediumCreateBaseStorage');
@@ -899,7 +849,7 @@ function vboxWizardNewHDDialog(suggested) {
 							}
 						};
 						ml.run();
-					},'progress_media_create_90px.png',trans('Create a virtual hard disk now','UIWizardNewVM'),
+					},'progress_media_create_90px.png',trans('Create a new virtual hard drive','VBoxMediaManagerDlg'),
 						vboxBasename(file),true);
 				} else {
 					self.completed.reject();
@@ -929,7 +879,7 @@ function vboxWizardCopyHDDialog(suggested) {
 
 	/* Common options */
 	this.name = 'wizardCopyHD';
-	this.title = trans('Copy Virtual Hard Disk','UIWizardCloneVD');
+	this.title = trans('Copy Virtual Hard Drive','UIWizardCloneVD');
 	this.bg = 'images/vbox/vmw_new_harddisk_bg.png';
 	this.icon = 'hd';
 	this.steps = 4;
@@ -966,7 +916,7 @@ function vboxWizardCopyHDDialog(suggested) {
 			}
 		}
 
-		var fsplit = $(self.form).find('[name=newHardDiskSplit]').prop('checked') && vboxMedia.formatSupportsSplit(format);
+		var fsplit = ($(self.form).find('[name=newHardDiskSplit]').prop('checked') && vboxMedia.formatSupportsSplit(format) ? 1 : 0);
 
 		var loc = jQuery.trim($(self.form).find('[name=wizardCopyHDLocation]').val());
 		if(!loc) {
@@ -1017,7 +967,7 @@ function vboxWizardCopyHDDialog(suggested) {
 							self.completed.resolve(mid);
 						};
 						ml.run();
-					},'progress_media_create_90px.png',trans('Copy Virtual Hard Disk','UIWizardCloneVD'),
+					},'progress_media_create_90px.png',trans('Copy Virtual Hard Drive','UIWizardCloneVD'),
 						vboxBasename(vboxMedia.getMediumById(src).location) + ' > ' + vboxBasename(loc));
 				} else {
 					self.completed.reject();
@@ -1283,153 +1233,22 @@ function vboxVMsettingsDialog(vm,pane) {
 		 */
 		var panes = new Array(
 				
-			{name:'General',label:'General',icon:'machine',tabbed:true,context:'UIMachineSettingsGeneral'},
-			{name:'System',label:'System',icon:'chipset',tabbed:true,context:'UIMachineSettingsSystem'},
-			{name:'Display',label:'Display',icon:'vrdp',tabbed:true,context:'UIMachineSettingsDisplay'},
-			{name:'Storage',label:'Storage',icon:'attachment',context:'UIMachineSettingsStorage'},
-			{name:'Audio',label:'Audio',icon:'sound',context:'UIMachineSettingsAudio'},
-			{name:'Network',label:'Network',icon:'nw',tabbed:true,context:'UIMachineSettingsNetwork'},
-			{name:'SerialPorts',label:'Serial Ports',icon:'serial_port',tabbed:true,context:'UIMachineSettingsSerial'},
-			{name:'ParallelPorts',label:'Parallel Ports',icon:'parallel_port',tabbed:true,disabled:(!$('#vboxPane').data('vboxConfig').enableLPTConfig),context:'UIMachineSettingsParallel'},
-			{name:'USB',label:'USB',icon:'usb',context:'UIMachineSettingsUSB'},
-			{name:'SharedFolders',label:'Shared Folders',icon:'sf',context:'UIMachineSettingsSF'}
+			{'name':'General','label':'General','icon':'machine','tabbed':true,'context':'UIMachineSettingsGeneral'},
+			{'name':'System','label':'System','icon':'chipset','tabbed':true,'context':'UIMachineSettingsSystem'},
+			{'name':'Display','label':'Display','icon':'vrdp','tabbed':true,'context':'UIMachineSettingsDisplay'},
+			{'name':'Storage','label':'Storage','icon':'attachment','context':'UIMachineSettingsStorage'},
+			{'name':'Audio','label':'Audio','icon':'sound','context':'UIMachineSettingsAudio'},
+			{'name':'Network','label':'Network','icon':'nw','tabbed':true,'context':'UIMachineSettingsNetwork'},
+			{'name':'SerialPorts','label':'Serial Ports','icon':'serial_port','tabbed':true,'context':'UIMachineSettingsSerial'},
+			{'name':'ParallelPorts','label':'Parallel Ports','icon':'parallel_port','tabbed':true,'disabled':(!$('#vboxPane').data('vboxConfig').enableLPTConfig),'context':'UIMachineSettingsParallel'},
+			{'name':'USB','label':'USB','icon':'usb','context':'UIMachineSettingsUSB'},
+			{'name':'SharedFolders','label':'Shared Folders','icon':'sf','context':'UIMachineSettingsSF'}
 
 		);
+		
+		
 
-		/*
-		 * Check for encryption settings change
-		 */
-		var presaveCallback = function() {
-		    
-		    if(!$('#vboxSettingsDialog').data('vboxEncSettingsChanged'))
-		        return true;
-		    
-		    var encMediaSettings = $.Deferred();
-		    
-		    // Validate
-		    if(!vboxSettingsGeneralValidate()) {
-        	      $('#vboxSettingsMenuList').children('li:eq(0)').first().click();
-        	      $('#vboxSettingsPane-General').tabs('option','active', 3);
-        	      encMediaSettings.reject();
-        	      return encMediaSettings;
-		    }
-		    
-		    var vm = $('#vboxSettingsDialog').data('vboxMachineData');
-		    var media = vboxStorage.getAttachedBaseMedia(vm);
-		    var encIds = vboxMedia.getEncryptedMediaIds(media);
-		    var encMedia = vboxMedia.getEncryptedMedia(media);
-
-		    var formCipher = $('#vboxSettingsDialog').data('vboxEncCipher');
-		    var formPassword = $('#vboxSettingsDialog').data('vboxEncPw');
-		    var formEncEnabled = $('#vboxSettingsDialog').data('vboxEncEnabled');
-		    
-		    // If encryption is not enabled, cipher needs to be blank
-		    if(!formEncEnabled) {
-		        formCipher = '';
-		    }
-		    
-		    // Get encryption password(s)
-            $.when(vboxMediumEncryptionPasswordsDialog(vm.name, encIds))
-            
-                .done(function(pwdata) {
-                    
-                    var runs = []
-                    
-                    // Each medium attached
-                    for(var i = 0; i < media.length; i++) {
-                        // Only hard disks
-                        if(media[i].deviceType != 'HardDisk') continue;
-                        
-                        var id = vm.name;
-                        var oldpw = "";
-                        var cipher = null;
-                        
-                        // Check for existing encryption setting
-                        for(var a = 0; a < encMedia.length; a++) {
-                            if(encMedia[a].medium == media[i].id) {
-                                cipher = media[i].encryptionSettings.cipher;
-                                // Look in passwords for id
-                                for(var b = 0; b < pwdata.length; b++) {
-                                    if(pwdata[b].id == id) {
-                                        oldpw = pwdata[b].password;
-                                        break;
-                                    }
-                                }
-                                break;
-                            }
-                        }
-                        
-                        runs.push({
-                            medium: media[i].id,
-                            cipher: cipher,
-                            encId: id,
-                            password: oldpw
-                        });
-                                                
-                    }
-                    // No encrypted media changes
-                    if(!runs.length) {
-                        encMediaSettings.resolve();
-                        return;
-                    }
-                    
-                    var l = new vboxLoader();
-                    l.showLoading();
-                    
-                    (function doruns(encMediaRuns){
-                        
-                        if(!encMediaRuns.length) {
-                            l.removeLoading();
-                            encMediaSettings.resolve();
-                            return;                            
-                        }
-                        
-                        var run = encMediaRuns.shift();
-                        
-                        // If encryption is enabled, and cypher is blank / "Leave Unchanged"
-                        // keep the original cipher
-                        var mcipher = formCipher;
-                        if(formEncEnabled && !mcipher) {
-                            mcipher = run.cipher;
-                        }
-                        
-                        var rdata = {
-                            medium: run.medium,
-                            id: run.encId,
-                            old_password: run.password,
-                            cipher: mcipher,
-                            password: formPassword
-                        };
-                        
-                        $.when(vboxAjaxRequest('mediumChangeEncryption',rdata)).done(function(d){
-                            
-                            if(d.responseData.progress) {
-                                var icon = 'progress_media_create_90px.png';
-                                var title = trans('Encryption');
-                                vboxProgress({'progress':d.responseData.progress,'persist':d.persist},function(){
-                                    // Loop
-                                    doruns(encMediaRuns);                                    
-                                },icon,title,vboxMedia.getMediumById(run.medium).name, true);
-                            } else {
-                                l.removeLoading();
-                                encMediaSettings.reject();
-                                return;
-                            }
-                            
-                        });
-                        
-                    })(runs);
-
-                })
-                .fail(function() {
-                    encMediaSettings.reject();
-                });
-  
-		    return encMediaSettings.promise();
-		    
-		}
-
-		$.when(vboxSettingsDialog(vmData.name + ' - ' + trans('Settings','UISettingsDialog'),panes,dataList,pane,'vm_settings','UISettingsDialogMachine', presaveCallback))
+		$.when(vboxSettingsDialog(vmData.name + ' - ' + trans('Settings','UISettingsDialog'),panes,dataList,pane,'vm_settings','UISettingsDialogMachine'))
 		
 			// Always run this
 			.always(function(){
@@ -1441,7 +1260,6 @@ function vboxVMsettingsDialog(vm,pane) {
 		
 			// Run this when "Save" is clicked
 			.done(function() {
-			    
 				var loader = new vboxLoader();
 				var sdata = $.extend($('#vboxSettingsDialog').data('vboxMachineData'),{'clientConfig':$('#vboxPane').data('vboxConfig')});
 				loader.add('machineSave',function(){return;},sdata);
@@ -1559,11 +1377,10 @@ function vboxWizardFirstRunDialog(vm) {
  * @param {String} pane - optionally automatically select pane when dialog is shown
  * @param {String} icon - optional URL to icon for dialog
  * @param {String} langContext - language context to use for translations
- * @param {Function} presave - presave callback to run
  * @returns {Object} deferred promise
  * @see trans()
  */
-function vboxSettingsDialog(title,panes,data,pane,icon,langContext,presave) {
+function vboxSettingsDialog(title,panes,data,pane,icon,langContext) {
 	
 	var results = $.Deferred();
 	
@@ -1648,24 +1465,14 @@ function vboxSettingsDialog(title,panes,data,pane,icon,langContext,presave) {
 		var buttons = { };
 		buttons[trans('OK','QIMessageBox')] = function() {
 			
-		    $(this).trigger('save');
-
-		    // Does some settings pane need to do some presave
-		    // work? (ask questions, run wizard, some other asynch task)
-		    var promise = true;
-		    if(presave) {
-		        promise = presave();
-		    }
-		    var dlg = this;
-		    $.when(promise).done(function() {
-		        results.resolve(true);
-		        $(dlg).trigger('close').empty().remove();
-		        $(document).trigger('click');                
-            });
+			$(this).trigger('save');
+			results.resolve(true);
+			$(this).trigger('close').empty().remove();
+			$(document).trigger('click');
 		};
 		buttons[trans('Cancel','QIMessageBox')] = function() {
 			results.reject();
-			$(this).trigger('close').empty().remove();
+			$('#vboxSettingsDialog').trigger('close').empty().remove();
 			$(document).trigger('click');
 		};
 
